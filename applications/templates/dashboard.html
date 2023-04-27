@@ -73,10 +73,22 @@
         }]
     }
     
+    const optionsPie = {
+        scales: {
+            yAxes: [{
+                beginAtZero: true
+            },
+            {gridLines: {
+                display:false
+            }
+        }],
+    }}
+
     const tvShowsPieChart = new Chart(pieCtx, {
         type: 'pie',
         data: pieChart,
-        options: options
+        options: optionsPie
     })
+
 </script>
 {% endblock %}
