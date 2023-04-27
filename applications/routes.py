@@ -35,7 +35,7 @@ def layout():
 def add_tv_show():
     form = UserDataForm()
     if form.validate_on_submit():
-        entry = TvShows(name = form.name.data, rating = form.rating.data, category= form.category.data)
+        entry = TvShows(name = form.name.data, rating = form.rating.data, category = form.category.data)
         db.session.add(entry)
         db.session.commit()
         flash("Successful entry", 'success')

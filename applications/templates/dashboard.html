@@ -49,20 +49,20 @@
     })
 
     const pieCtx = document.getElementById('categoryChart')
-    const pieChartLabels = data.map(item => item.category)
+    const pieChartLabels = [...new Set(data.map(item => item.category))];
     const pieChartAmounts = data.map(item => item.rating)
-    //function to get average rating of each category in the data
+
     function getAverageRating(category) {
         const categoryData = data.filter(item => item.category === category)
         const total = categoryData.reduce((acc, item) => acc + item.rating, 0)
         return (total / categoryData.length).toFixed(2)
     }
     const pieChartAmountsAverage = pieChartLabels.map(item => getAverageRating(item))
-    
+
     const pieChart = {
-        labels: labels,
+        labels: pieChartLabels,
         datasets: [{
-            label: 'Tv Shows Ratings',
+            label: 'Tv Categories Ratings',
             data: pieChartAmountsAverage,
             backgroundColor: backgroundColors ,
             borderColor: [
