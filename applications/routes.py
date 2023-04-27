@@ -10,6 +10,14 @@ def index():
     entries = TvShows.query.order_by(TvShows.date.desc()).all()
     return render_template('index.html', title = 'index', entries = entries)
 
+@app.route('/dashboard')
+def dashboard():
+    entries = TvShows.query.all()
+    data = [d.__dict__ for d in entries]
+    for item in data:
+        item.pop('_sa_instance_state', None)
+    return render_template('dashboard.html', data = data)
+
 
 @app.route('/delete-post/<int:entry_id>')
 def delete(entry_id):
@@ -27,7 +35,7 @@ def layout():
 def add_tv_show():
     form = UserDataForm()
     if form.validate_on_submit():
-        entry = TvShows(name = form.name.data, rating = form.rating.data)
+        entry = TvShows(name = form.name.data, rating = form.rating.data, category= form.category.data)
         db.session.add(entry)
         db.session.commit()
         flash("Successful entry", 'success')

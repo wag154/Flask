@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container">
+    <canvas id="movieChart" style="max-height: 420px;">
+    </canvas>
+    <canvas id="categoryChart" style="max-height: 420px;"></canvas>
+</div>
+
+<script>
+    const data = {{ data | tojson }}
+    const ctx = document.getElementById('movieChart')
+    const labels = data.map(item => item.name)
+    const amounts = data.map(item => item.rating)
+
+    function getRandomColor() {
+     const letters = '0123456789ABCDEF';
+     let color = '#';
+     for (let i = 0; i < 6; i++) {
+       color += letters[Math.floor(Math.random() * 16)];
+     }
+     return color;
+   }
+   const backgroundColors = amounts.map(() => getRandomColor());
+
+   const chartData = {
+        labels: labels,
+        datasets: [{
+            label: 'Tv Shows Ratings',
+            data: amounts,
+            backgroundColor: backgroundColors ,
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }
+    const options = {
+        scales: {
+            y: {beginAtZero: true
+            }
+        }
+    }
+    const tvShowsChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: options
+    })
+
+    const pieCtx = document.getElementById('categoryChart')
+    const pieChartLabels = data.map(item => item.category)
+    const pieChartAmounts = data.map(item => item.rating)
+    //function to get average rating of each category in the data
+    function getAverageRating(category) {
+        const categoryData = data.filter(item => item.category === category)
+        const total = categoryData.reduce((acc, item) => acc + item.rating, 0)
+        return (total / categoryData.length).toFixed(2)
+    }
+    const pieChartAmountsAverage = pieChartLabels.map(item => getAverageRating(item))
+    
+    const pieChart = {
+        labels: labels,
+        datasets: [{
+            label: 'Tv Shows Ratings',
+            data: pieChartAmountsAverage,
+            backgroundColor: backgroundColors ,
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }
+    
+    const tvShowsPieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: pieChart,
+        options: options
+    })
+</script>
+{% endblock %}
